@@ -1,0 +1,176 @@
+{% load static %}
+<style>
+  input {
+    justify-content: center;
+    border-radius: 25px;
+    width: 250px;
+    height: 40px;
+    font-family: sans-serif;
+    font-size: medium;
+    color: black;
+    font-weight: bold;
+    position: relative;
+    cursor: pointer;
+    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    margin-top: 15px;
+    padding-left: 13px;
+  }
+  .menu-bar {
+    border-radius: 25px;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+    display: inline-flex;
+    background-color: rgba(0, 0, 0, 0.4);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    align-items: center;
+    padding: 0 10px;
+    width: 100%;
+    margin: 20px 0px 0px 10px;
+  }
+
+  .menu-bar li {
+    list-style: none;
+    color: white;
+    font-family: sans-serif;
+    font-weight: bold;
+    padding: 12px 16px;
+    margin: 0 8px;
+    position: relative;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .menu-bar li::before {
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+    transition: 0.2s;
+    border-radius: 25px;
+  }
+
+  .menu-bar li:hover {
+    color: black;
+  }
+
+  .menu-bar li:hover::before {
+    background: linear-gradient(to bottom, #e8edec, #d2d1d3);
+    box-shadow: 0px 3px 20px 0px black;
+    transform: scale(1.2);
+  }
+
+  .menu-bar li:nth-child(7) {
+    margin-left: 10cm;
+  }
+
+  .menu-bar li:nth-child(2) {
+    margin-left: 50px;
+  }
+
+  .menu-bar a {
+    font-family: sans-serif;
+    display: block;
+    color: white;
+    text-decoration: none;
+    position: relative;
+    list-style: none;
+    font-weight: bold;
+    padding: 12px 16px;
+    margin: 0 8px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .menu-bar a::before {
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+    transition: 0.2s;
+    border-radius: 25px;
+    /* color: black; */
+  }
+  .menu-bar a:hover {
+    color: black;
+  }
+  .menu-bar a:hover::before {
+    background: linear-gradient(to bottom, #e8edec, #d2d1d3);
+    box-shadow: 0px 3px 20px 0px black;
+    transform: scale(1.2);
+  }
+  img {
+    width: 50px;
+    height: 35px;
+  }
+</style>
+
+<nav class="navbar navbar-expand-lg">
+  <ul class="menu-bar">
+    <a href="{% url 'account:home' %}"
+      ><img src="{% static 'images/logo.png' %}"
+    /></a>
+    {% if account_nav %}
+    <form
+      class="search-bar justify-content-start"
+      onsubmit="return executeQuery();"
+    >
+      <input
+        type="text"
+        class="form-control"
+        name="q"
+        id="id_q_large"
+        placeholder="Search..."
+        autofocus
+      />
+    </form>
+    {% else %}
+    <a href="{% url 'question:all_question' %}">Questions</a>
+    <li>Type</li>
+    <a href="{% url 'notification:show_notification' %}">
+      <span>Notification</span>
+      {% if count_notifications %}
+      <span>{{count_notifications}}</span>
+      {% endif %}
+    </a>
+    
+    <li>Contect Us</li>
+    <li>About Us</li>
+    {% if request.user.is_authenticated %}
+    <div class="space">
+      <a
+        style="margin-left: 15cm"
+        href="{% url 'account:view' user_id=request.user.id %}"
+        >Account</a
+      >
+    </div>
+    <a href="{% url 'account:logout' %}">Logout</a>
+    {% else %}
+    <a style="margin-left: 15cm" href="{% url 'account:register' %}"
+      >Register</a
+    >
+    <a href="{% url 'account:login' %}">Login</a>
+    {% endif %} {% endif %}
+  </ul>
+</nav>
+
+<script type="text/javascript">
+  function executeQuery() {
+    var query = "";
+    // query = document.getElementById("id_q_small").value;
+    // if (query == "") {
+    query = document.getElementById("id_q_large").value;
+    // }
+    window.location.replace("{% url 'account:search' %}?q=" + query);
+    return false;
+  }
+</script>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <a></a>
+    <form onsubmit="return executeQuery();">
+      <input
+        type="text"
+        class="form-control"
+        name="q"
+        id="id_q_large"
+        placeholder="Search..."
+      />
+    </form>
+    <table border="1">
+      <tr>
+        <th>No.</th>
+        <th>Question</th>
+        <th>Likes</th>
+      </tr>
+      {% for q in question %}
+      <tr>
+        <td>{{q.id}}</td>
+        <td>
+          <a href="{% url 'question:question' question_id=q.id %}"
+            >{{q.question}}</a
+          >
+        </td>
+        <td>{{q.like.all.count}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% if question.has_other_pages %}
+    <ul class="pagination">
+      {% if question.has_previous %}
+      <li><a href="?page={{ question.previous_page_number }}">&laquo;</a></li>
+      {% else %}
+      <li class="disabled"><span>&laquo;</span></li>
+      {% endif %} {% for i in question.paginator.page_range %} {% if
+      question.number == i %}
+      <!-- <li class="active">
+        <span>{{ i }} <span class="sr-only">(current)</span></span>
+      </li> -->
+      <li><a href="?page={{ i }}">{{ i }}</a></li>
+      {% endfor %} {% if question.has_next %}
+      <li><a href="?page={{ question.next_page_number }}">&raquo;</a></li>
+      {% else %}
+      <li class="disabled"><span>&raquo;</span></li>
+      {% endif %}
+    </ul>
+    {% endif %}
+  </body>
+</html>
+
+<script type="text/javascript">
+  function executeQuery() {
+    var query = "";
+    // query = document.getElementById("id_q_small").value;
+    // if (query == "") {
+    query = document.getElementById("id_q_large").value;
+    // }
+    window.location.replace("{% url 'question:search' %}?q=" + query);
+    return false;
+  }
+</script>

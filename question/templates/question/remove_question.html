@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <form
+      action="{% url 'question:remove_question' question_id=question.id %}"
+      method="POST"
+    >
+      {% csrf_token %}
+      <a href="{% url 'account:home' %}">Cancel</a>
+      <button type="submit">Yes</button>
+    </form>
+  </body>
+</html>

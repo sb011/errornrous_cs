@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <form method="POST">
+      {% csrf_token %}
+      <label for="answer">Answer</label>
+      <input type="text" id="answer" name="answer" placeholder="Answer..." />
+      {% for field in form %} {% for error in field.errors %}
+      <p>{{error}}</p>
+      {% endfor %} {% endfor %} {% if form.non_field_errors %}
+      <p>{{form.non_field_errors}}</p>
+      {% endif %}
+      <button>Add Answer</button>
+    </form>
+  </body>
+</html>

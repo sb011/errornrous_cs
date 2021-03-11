@@ -1,0 +1,29 @@
+{% extends 'account/main.html' %} {% load static %} {% block content %}
+<style>
+  .search {
+    border-radius: 25px;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+    /* display: inline-flex; */
+    background-color: rgba(0, 0, 0, 0.4);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    align-items: center;
+    /* padding: 2.4cm 5.5cm; */
+    width: 35cm;
+    height: 13cm;
+    margin-top: 1.3cm;
+    margin-left: 2.8cm;
+    padding-bottom: 3.5em;
+  }
+</style>
+<div class="search">
+  {% if accounts %} {% for account in accounts %}
+  <img src="{{account.0.profile_image.url}}" />
+  <a href="{% url 'account:view' user_id=account.0.id %}">
+    <h4>{{account.0.username}}</h4>
+  </a>
+  {% endfor %}{% endif %}
+</div>
+{% endblock %}

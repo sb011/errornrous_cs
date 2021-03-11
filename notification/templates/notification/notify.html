@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <body>
+    {% for notification in notifications %}
+    {% if notification.notification_type == '3' %}
+      <a href="{% url 'notification:delete_notification' noti_id=notification.id %}" class="delete btn-danger">x</a>
+      <img
+        src="{{notification.sender.profile_image}}"
+        style="width: 100px; height: 100px"
+      />
+      <strong>
+        {{notification.sender.username}} answered your Question
+        {{notification.question}}
+      </strong>
+      <strong>{{notification.date}}</strong>
+      <br>
+      {% endif %}
+      {% if notification.notification_type == '2' %}
+      <a href="{% url 'notification:delete_notification' noti_id=notification.id %}" class="delete btn-danger">x</a>
+      <img
+        src="{{notification.sender.profile_image}}"
+        style="width: 100px; height: 100px"
+      />
+      <strong>
+        {{notification.sender.username}} is Liked your Question
+        {{notification.question}}
+      </strong>
+      <strong>{{notification.date}}</strong>
+      <br>
+      {% endif %}
+      {% if notification.notification_type == '1' %}
+      <a href="{% url 'notification:delete_notification' noti_id=notification.id %}" class="delete btn-danger">x</a>
+      <img
+        src="{{notification.sender.profile_image}}"
+        style="width: 100px; height: 100px"
+      />
+      <strong>
+        {{notification.sender.username}} is Liked your Answer
+        {{notification.answer}}
+      </strong>
+      <strong>{{notification.date}}</strong>
+      <br>
+      {% endif %}
+    {% endfor %}
+  </body>
+</html>

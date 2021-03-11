@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <table border="2">
+      <tr>
+        <th>
+          <a href="{% url 'question:add_answer' question_id=question.id %}"
+            >Add Answer</a
+          >
+        </th>
+      </tr>
+    </table>
+    <br />
+    <table border="2">
+      <tr>
+        <td>{{question.id}}</td>
+        <td>{{question.title}}</td>
+        <td>{{question.question}}</td>
+        <td>{{question.auth}}</td>
+        <td>
+          <form
+            action="{% url 'question:question_like' question_id=question.id %}"
+            method="POST"
+          >
+            {% csrf_token %}
+            <input type="hidden" name="question_like" value="{{question.id}}" />
+            {% if user not in question.like.all %}
+            <button type="submit">Like</button>
+            {% else %}
+            <button type="submit">UnLike</button>
+            {% endif %}
+          </form>
+          <strong>{{question.like.all.count}} likes</strong>
+        </td>
+        {% if is_self %}
+        <td>
+          <a href="{% url 'question:edit_question' question_id=question.id %}"
+            >Update</a
+          >
+        </td>
+        <td>
+          <a href="{% url 'question:remove_question' question_id=question.id %}"
+            >Remove</a
+          >
+        </td>
+        {% endif %}
+      </tr>
+    </table>
+    <br />
+    <table border="2">
+      {% for ans in answer %}
+      <tr>
+        <th>{{ans.id}}</th>
+        <th>{{ans.answer}}</th>
+        <th>{{ans.auth}}</th>
+        <th>
+          <form
+            action="{% url 'question:like' question_id=question.id %}"
+            method="POST"
+          >
+            {% csrf_token %}
+            <input type="hidden" name="answer_like" value="{{ans.id}}" />
+            {% if user not in ans.like.all %}
+            <button type="submit">Like</button>
+            {% else %}
+            <button type="submit">UnLike</button>
+            {% endif %}
+          </form>
+          <strong>{{ans.like.all.count}} likes</strong>
+        </th>
+        {% for a in answer_owner %} {% if a == ans %}
+        <td>
+          <a
+            href="{% url 'question:edit_answer' question_id=question.id answer_id=ans.id %}"
+            >Update</a
+          >
+        </td>
+        <td>
+          <a
+            href="{% url 'question:remove_answer' question_id=question.id answer_id=ans.id %}"
+            >Remove</a
+          >
+        </td>
+        {% endif %} {% endfor %}
+      </tr>
+      {% endfor %}
+    </table>
+  </body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <form method="POST">
+      {% csrf_token %}
+      <label for="title">Title</label>
+      <input type="text" id="title" name="title" placeholder="Title..." />
+      <label for="question">Question</label>
+      <input
+        type="text"
+        id="question"
+        name="question"
+        placeholder="Question..."
+      />
+      {% for field in form %} {% for error in field.errors %}
+      <p>{{error}}</p>
+      {% endfor %} {% endfor %} {% if form.non_field_errors %}
+      <p>{{form.non_field_errors}}</p>
+      {% endif %}
+      <button>Add Question</button>
+    </form>
+  </body>
+</html>

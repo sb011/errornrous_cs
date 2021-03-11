@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    <form method="POST">
+      {% csrf_token %}
+      <label for="title">
+        <input
+          type="text"
+          name="title"
+          id="title"
+          placeholder="Title..."
+          value="{{form.initial.title}}"
+        />
+      </label>
+      <label for="question">
+        <input
+          type="text"
+          name="question"
+          id="question"
+          placeholder="Question..."
+          value="{{form.initial.question}}"
+          required
+        />
+      </label>
+      {% for field in form %} {% for error in field.error %}
+      <p>{{error}}</p>
+      {% endfor %} {% endfor %}
+      <button type="submit">Save</button>
+    </form>
+  </body>
+</html>

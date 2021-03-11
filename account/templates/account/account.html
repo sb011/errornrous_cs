@@ -1,0 +1,275 @@
+{% extends 'account/main.html' %} {% load static %} {% block content %}
+<style>
+  .row {
+    display: table;
+  }
+  .column {
+    float: left;
+  }
+  /* .card {
+    box-shadow: 0 20px 10px 0 rgba(0, 0, 0, 0.2);
+  } */
+  .image {
+    border-radius: 55%;
+    width: 180px;
+    height: 180px;
+    margin-top: 4em;
+    margin-left: 6em;
+  }
+  .profile {
+    border-radius: 25px;
+    height: -webkit-fit-content;
+    height: -moz-fit-content;
+    height: fit-content;
+    /* display: inline-flex; */
+    background-color: rgba(0, 0, 0, 0.4);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    align-items: center;
+    /* padding: 2.4cm 5.5cm; */
+    width: 35cm;
+    height: 13cm;
+    margin-top: 1.3cm;
+    margin-left: 2.8cm;
+    padding-bottom: 3.5em;
+  }
+
+  .card-right {
+    position: relative;
+    margin-top: 5em;
+    margin-left: 6em;
+  }
+
+  .card-under {
+    margin-top: 2em;
+    margin-left: 7em;
+  }
+
+  .table2 {
+    font-size: 20;
+    display: block;
+    /* border-spacing: 0; */
+    border-radius: 15px;
+  }
+
+  .table2 tr {
+    background-color: rgba(130, 130, 170, 0.1);
+  }
+
+  .table th,
+  td {
+    border-radius: 15px;
+    padding: 10px;
+  }
+
+  .table-scroll {
+    /*width:100%; */
+    display: block;
+    /* empty-cells: show; */
+    width: 25cm;
+    margin-left: 4em;
+    /* Decoration */
+    border-spacing: 0;
+    /* border: rgba(130, 130, 170, 0.1); */
+  }
+
+  .table-scroll thead {
+    border-radius: 15px;
+    position: relative;
+    display: block;
+    width: 100%;
+    overflow-y: hidden;
+    background-color: rgba(130, 130, 170, 0.1);
+  }
+
+  .table-scroll tbody {
+    border-radius: 15px;
+    /* Position */
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow-y: scroll;
+    /* Decoration */
+    border-top: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .table-scroll tr {
+    width: 100%;
+    display: flex;
+  }
+
+  .table-scroll td,
+  .table-scroll th {
+    flex-basis: 100%;
+    flex-grow: 2;
+    display: block;
+    padding: 1rem;
+    text-align: left;
+  }
+
+  /* Other options */
+
+  .table-scroll.small-first-col td:first-child,
+  .table-scroll.small-first-col th:first-child {
+    flex-basis: 20%;
+    flex-grow: 1;
+  }
+
+  .table-scroll tbody tr:nth-child(2n) {
+    background-color: rgba(130, 130, 170, 0.1);
+  }
+
+  .body-half-screen {
+    max-height: 50vh;
+  }
+
+  .small-col {
+    flex-basis: 10%;
+  }
+
+  .table-scroll ::-webkit-scrollbar {
+    width: 6px;
+  }
+  .table-scroll ::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  }
+  .table-scroll ::-webkit-scrollbar-thumb {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  }
+
+  a {
+    font-family: sans-serif;
+    display: block;
+    color: white;
+    text-decoration: none;
+    position: relative;
+    list-style: none;
+    font-weight: bold;
+    cursor: pointer;
+    white-space: nowrap;
+    margin: 2px;
+    padding: 4px;
+  }
+  a::before {
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+    transition: 0.2s;
+    border-radius: 25px;
+    color: black;
+  }
+  a:hover {
+    color: black;
+  }
+  a:hover::before {
+    background: linear-gradient(to bottom, #e8edec, #d2d1d3);
+    box-shadow: 0px 3px 20px 0px black;
+    transform: scale(1.2);
+  }
+</style>
+
+<br />
+<div class="profile">
+  <div class="row">
+    <div class="column">
+      <div class="card card-md">
+        <img class="image" src={{profile_image.url}} />
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="card card-md">
+        <div class="card-right">
+          <table class="table2">
+            <tbody class="table3">
+              <tr>
+                <td>Email:</td>
+                {% if is_self %}
+                <td>{{email}}</td>
+                {% else %} {% if hide_email %}
+                <td>**********</td>
+                {% else %}
+                <td>{{email}}</td>
+                {% endif %} {% endif %}
+              </tr>
+              <tr>
+                <td>Username:</td>
+                <td>{{username}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="column">
+      <div class="card card-body">
+        <div class="card-under">
+          {% if is_self %}
+          <div class="container">
+            <table>
+              <a
+                class="mt-4 btn btn-primary"
+                href="{% url 'account:edit' user_id=id %}"
+                >Update</a
+              >
+              <a class="m-auto" href="{% url 'password_change' %}"
+                >Change password</a
+              >
+              <a href="{% url 'question:add_question' %}">Add Question</a>
+              {% endif %}
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="column">
+      <div class="card card-body">
+        <table class="table-scroll small-first-col">
+          <thead>
+            <tr>
+              <th>No.</th>
+              <th>Question</th>
+              <th>Like</th>
+              {% if is_self %}
+              <th>Remove</th>
+              {% endif %}
+            </tr>
+          </thead>
+          <tbody class="body-half-screen">
+            {% for question in questions %}
+            <tr class="tr">
+              <th class="td">{{question.id}}</th>
+              <th class="td">
+                <a href="{% url 'question:question' question_id=question.id %}"
+                  >{{question.title}}</a
+                >
+              </th>
+              <th class="td">{{question.like.all.count}}</th>
+              {% if is_self %}
+              <th class="td">
+                <a
+                  href="{% url 'question:remove_question' question_id=question.id %}"
+                  >Remove</a
+                >
+              </th>
+              {% endif %}
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <body>
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <label for="image">Image</label>
+      <img
+        class="border border-dark rounded-circle img-fluid mx-auto profile-image"
+        id="id_profile_image_display"
+        src="{{form.intial.profile_image.url}}"
+        alt="codingwithmitch logo"
+      />
+      {{form.profile_image}}
+      <label for="username">Username</label>
+      <input
+        type="text"
+        name="username"
+        id="username"
+        placeholder="Username..."
+        value="{{form.initial.username}}"
+      />
+      <label for="email">email</label>
+      <input
+        type="email"
+        name="email"
+        id="email"
+        placeholder="Email..."
+        value="{{form.initial.email}}"
+      />
+      <label>
+        <input
+          type="checkbox"
+          name="hide_email"
+          id="id_input_hide_email"
+          {%
+          if
+          form.initial.hide_email
+          %}
+          checked
+          {%
+          endif
+          %}
+        />
+        Hide Email
+      </label>
+      {% for field in form %} {% for error in field.errors %}
+      <p>{{error}}</p>
+      {% endfor %} {% endfor %} {% if form.non_field_errors %}
+      <p>{{form.non_field.errors}}</p>
+      {% endif %}
+      <button type="submit">Save</button>
+    </form>
+  </body>
+</html>
+
+<script type="text/javascript">
+  var imageFile;
+  var base64ImageString;
+
+  enableImageOverlay();
+
+  function enableImageOverlay() {
+    var text = document.getElementById("id_text");
+    text.style.backgroundColor = "#0066ff";
+    text.style.color = "white";
+    text.style.fontSize = "16px";
+    text.style.padding = "16px 32px";
+    text.style.cursor = "pointer";
+
+    var profileImage = document.getElementById("id_profile_image");
+    profileImage.style.opacity = "1";
+    profileImage.style.display = "block";
+    profileImage.style.width = "100%";
+    profileImage.style.height = "auto";
+    profileImage.style.transition = ".5s ease";
+    profileImage.style.backfaceVisibility = "hidden";
+    profileImage.style.cursor = "pointer";
+
+    var middleContainer = document.getElementById("id_middle_container");
+    middleContainer.style.transition = ".5s ease";
+    middleContainer.style.opacity = "0";
+    middleContainer.style.position = "absolute";
+    middleContainer.style.top = "50%";
+    middleContainer.style.left = "50%";
+    middleContainer.style.transform = "translate(-50%, -50%)";
+    middleContainer.style.textAlign = "center";
+
+    var imageContainer = document.getElementById("id_image_container");
+    imageContainer.addEventListener("mouseover", function (event) {
+      profileImage.style.opacity = "0.3";
+      middleContainer.style.opacity = "1";
+    });
+
+    imageContainer.addEventListener("mouseout", function (event) {
+      profileImage.style.opacity = "1";
+      middleContainer.style.opacity = "0";
+    });
+
+    imageContainer.addEventListener("click", function (event) {
+      document.getElementById("id_profile_image").click();
+    });
+  }
+
+  function disableImageOverlay() {
+    var profileImage = document.getElementById("id_profile_image_display");
+    var middleContainer = document.getElementById("id_middle_container");
+    var imageContainer = document.getElementById("id_image_container");
+    var text = document.getElementById("id_text");
+
+    imageContainer.removeEventListener("mouseover", function (event) {
+      profileImage.style.opacity = "0.3";
+      middleContainer.style.opacity = "1";
+    });
+
+    imageContainer.removeEventListener("mouseout", function (event) {
+      profileImage.style.opacity = "1";
+      middleContainer.style.opacity = "0";
+    });
+
+    profileImage.style.opacity = "1";
+    middleContainer.style.opacity = "0";
+    text.style.cursor = "default";
+    text.style.opacity = "0";
+
+    document
+      .getElementById("id_image_container")
+      .removeEventListener("click", function (event) {
+        event.preventDefault();
+        // do nothing
+      });
+    document
+      .getElementById("id_profile_image")
+      .addEventListener("click", function (event) {
+        event.preventDefault();
+        // do nothing
+      });
+  }
+
+  /* return null if invalid or base64String if valid */
+  function isImageSizeValid(image) {
+    console.log("max size: {{DATA_UPLOAD_MAX_MEMORY_SIZE}}");
+    // console.log(image)
+    var startIndex = image.indexOf("base64,") + 7;
+    var base64str = image.substr(startIndex);
+    var decoded = atob(base64str);
+    console.log("FileSize: " + decoded.length);
+    if (decoded.length >= "{{DATA_UPLOAD_MAX_MEMORY_SIZE}}") {
+      return null;
+    }
+    return base64str;
+  }
+
+  /*
+    Called when a new image is selected from file chooser dialog
+  */
+  function readURL(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        disableImageOverlay();
+        var image = e.target.result;
+        var imageField = document.getElementById("id_profile_image_display");
+        imageField.src = image;
+        cropper = new Cropper(imageField, {
+          aspectRatio: 1 / 1,
+          crop(event) {
+            // console.log("CROP START")
+            // console.log("x: " + event.detail.x);
+            // console.log("y: " + event.detail.y);
+            // console.log("width: " + event.detail.width);
+            // console.log("height: " + event.detail.height);
+          },
+        });
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+</script>

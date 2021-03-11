@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <body>
+    {% if questions %}
+    <table>
+      <tr>
+        <th>No.</th>
+        <th>Question</th>
+        <th>views</th>
+      </tr>
+      {% for question in questions %}
+      <tr>
+        <td>{{question.id}}</td>
+        <td>{{question.title}}</td>
+        <td>{{question.views}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% endif %}
+  </body>
+</html>
